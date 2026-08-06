@@ -120,7 +120,12 @@
     submitBtn.textContent = "שולח...";
 
     try {
-      const response = await fetch("/api/vote", {
+      const apiBase = window.VOTE_API_BASE ||
+        (window.location.hostname.endsWith("github.io")
+          ? "https://ohel-leah-vote.vercel.app"
+          : "");
+
+      const response = await fetch(`${apiBase}/api/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -133,10 +138,8 @@
       });
 
       const contentType = response.headers.get("content-type") || "";
-      if (response.status === 404 || !contentType.includes("application/json")) {
-        throw new Error(
-          "שמירת ההצבעות דורשת שרת פעיל (למשל Render). דף GitHub Pages מציג את הטופס בלבד."
-        );
+      if (!contentType.includes("application/json")) {
+        throw new Error("שמירת ההצבעה נכשלה. נסו שוב בעוד רגע.");
       }
       const result = await response.json();
       if (!response.ok || !result.ok) {
