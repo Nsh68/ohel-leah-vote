@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>הצבעה – אסיפת חברים | אהל לאה</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&family=Assistant:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <img class="logo" src="logo.jpg" alt="סמל בית הכנסת אהל לאה" width="200" height="160" />
+      <h1>הצבעה על כינוס אסיפת חברים</h1>
+    </header>
+
+    <main>
+      <section class="letter" aria-labelledby="letter-title">
+        <h2 id="letter-title" class="visually-hidden">פנייה לחברי הקהילה</h2>
+        <p>
+          על מנת לאפשר חתימה על חוזה לקבלת תרומה עבור בניית בית הכנסת בראש חודש אלול,
+          תאריך שחשוב עבור התורמים, עלינו לקיים אסיפת חברים בהתראה קצרה, בכדי להביא את
+          החוזה לאישור הקהילה. על פי התקנון נדרשת הודעה על אסיפת חברים שבועיים מראש.
+          אנו מבקשים את אישור חברי הקהילה לקיים את האסיפה שבה תתקיים הצבעה לאישור
+          החוזה מול התורם בהתראה קצרה יותר.
+        </p>
+        <p>
+          נודה לכם אם תצביעו בטופס הבא. שימו לב: נדרשת הצבעה של רוב משמעותי מחברי
+          הקהילה כדי לאפשר מהלך הנוגד את התקנון. אנא מכם היכנסו והצביעו.
+        </p>
+      </section>
+
+      <section class="vote-panel" aria-labelledby="form-title">
+        <h2 id="form-title">טופס הצבעה</h2>
+
+        <form id="vote-form" novalidate>
+          <fieldset class="vote-options">
+            <legend>בחרו אחת מהאפשרויות</legend>
+
+            <label class="option">
+              <input type="radio" name="vote" value="for" required />
+              <span class="option-body">
+                <span class="option-mark" aria-hidden="true"></span>
+                <span class="option-text">
+                  אני מצביע בעד עריכת אסיפת חברים שלא מן המניין ביום רביעי, כ״ט באב
+                  תשפ״ו, 6 לאוגוסט 2026 למניינם בשעה 19:00. האסיפה תתקיים בבית הכנסת
+                  ובזום.
+                </span>
+              </span>
+            </label>
+
+            <label class="option">
+              <input type="radio" name="vote" value="against" required />
+              <span class="option-body">
+                <span class="option-mark" aria-hidden="true"></span>
+                <span class="option-text">
+                  אני מתנגד לקיום אסיפת חברים שלא מן המניין ללא התראה של שבועיים
+                  מראש.
+                </span>
+              </span>
+            </label>
+          </fieldset>
+
+          <div class="fields">
+            <label>
+              <span>שם ושם משפחה</span>
+              <input type="text" name="fullName" autocomplete="name" required />
+            </label>
+            <label>
+              <span>טלפון</span>
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" required />
+            </label>
+            <label class="full">
+              <span>דוא״ל</span>
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+          </div>
+
+          <div class="signature-block">
+            <div class="signature-head">
+              <label for="signature-pad">חתימה</label>
+              <button type="button" id="clear-signature" class="link-btn">נקה חתימה</button>
+            </div>
+            <canvas id="signature-pad" width="640" height="180" aria-label="אזור חתימה"></canvas>
+            <p class="hint">חתמו בעזרת העכבר או האצבע על המסך</p>
+          </div>
+
+          <p id="form-message" class="form-message" role="status" aria-live="polite" hidden></p>
+
+          <button type="submit" class="submit-btn" id="submit-btn">
+            שליחת הצבעה
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>התגובות נשמרות בקובץ אקסל מסודר לשימוש הנהלת בית הכנסת אהל לאה.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
