@@ -1,6 +1,7 @@
 import json
 import subprocess
 from datetime import datetime, timezone
+from pathlib import Path
 
 GIST_ID = "7cbabc8fb32ec2fbbafe33eb4aae9a51"
 
@@ -11,10 +12,14 @@ def gh_json(args):
 
 
 def main():
-    gist = gh_json(["api", f"gists/{GIST_ID}"])
-    files = gist.get("files", {})
-    votes = files.get("votes.json", {}).get("content", "[]")
-    votes_list = json.loads(votes) if votes else []
+    restored_path = Path("data/restored-votes.json")
+    if restored_path.exists():
+        votes_list = json.loads(restored_path.read_text(encoding="utf-8"))
+    else:
+        gist = gh_json(["api", f"gists/{GIST_ID}"])
+        files = gist.get("files", {})
+        votes = files.get("votes.json", {}).get("content", "[]")
+        votes_list = json.loads(votes) if votes else []
 
     log_lines = []
     for vote in votes_list:
@@ -34,12 +39,14 @@ def main():
             )
         )
 
+    votes_content = json.dumps(votes_list, ensure_ascii=False, indent=2)
     date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     payload = {
         "files": {
+            "votes.json": {"content": votes_content},
             "votes-log.jsonl": {"content": "\n".join(log_lines) + ("\n" if log_lines else "")},
-            "backup-latest.json": {"content": votes},
-            f"backup-{date}.json": {"content": votes},
+            "backup-latest.json": {"content": votes_content},
+            f"backup-{date}.json": {"content": votes_content},
         }
     }
 
