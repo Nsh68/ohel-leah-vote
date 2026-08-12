@@ -1,4 +1,4 @@
-const { readVotes, writeVotes, appendVoteLog, VOTE_LABELS } = require("../lib/votesStore");
+const { readVotes, writeVotes, appendVoteLog, appendSignature, VOTE_LABELS } = require("../lib/votesStore");
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -53,6 +53,7 @@ module.exports = async function handler(req, res) {
     votes.push(newVote);
 
     await appendVoteLog(newVote);
+    await appendSignature(newVote);
     await writeVotes(votes);
 
     return res.status(200).json({ ok: true });
