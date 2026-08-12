@@ -1,0 +1,44 @@
+name: Backup votes daily
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create dated gist backup
+        env:
+          GIST_ID: ${{ secrets.GIST_ID }}
+          GITHUB_TOKEN: ${{ secrets.GIST_BACKUP_TOKEN }}
+        run: |
+          if [ -z "$GIST_ID" ] || [ -z "$GITHUB_TOKEN" ]; then
+            echo "Missing GIST_ID or GIST_BACKUP_TOKEN repository secrets."
+            exit 1
+          fi
+
+          DATE=$(date -u +%Y-%m-%d)
+          VOTES=$(gh api "gists/$GIST_ID" --jq '.files["votes.json"].content')
+          LOG=$(gh api "gists/$GIST_ID" --jq '.files["votes-log.jsonl"].content // ""')
+
+          jq -n \
+            --arg votes "$VOTES" \
+            --arg log "$LOG" \
+            --arg date "$DATE" \
+            '{
+              files: {
+                ("backup-" + $date + ".json"): { content: $votes },
+                ("backup-log-" + $date + ".jsonl"): { content: $log }
+              }
+            }' > backup-payload.json
+
+          gh api "gists/$GIST_ID" -X PATCH --input backup-payload.json
+          echo "Daily backup saved for $DATE"

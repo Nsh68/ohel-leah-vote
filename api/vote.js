@@ -1,4 +1,4 @@
-const { readVotes, writeVotes, VOTE_LABELS } = require("../lib/votesStore");
+const { readVotes, writeVotes, appendVoteLog, VOTE_LABELS } = require("../lib/votesStore");
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -39,7 +39,7 @@ module.exports = async function handler(req, res) {
     const votes = await readVotes();
     const timestamp = new Date();
 
-    votes.push({
+    const newVote = {
       timestamp: timestamp.toLocaleString("he-IL", { timeZone: "Asia/Jerusalem" }),
       timestampIso: timestamp.toISOString(),
       vote: VOTE_LABELS[vote],
@@ -48,8 +48,11 @@ module.exports = async function handler(req, res) {
       phone: String(phone).trim(),
       email: String(email).trim(),
       signatureDataUrl: String(signatureDataUrl),
-    });
+    };
 
+    votes.push(newVote);
+
+    await appendVoteLog(newVote);
     await writeVotes(votes);
 
     return res.status(200).json({ ok: true });
