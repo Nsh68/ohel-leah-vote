@@ -6,3 +6,4 @@ data/signatures/*
 .DS_Store
 .vercel
 .env
+.env*
